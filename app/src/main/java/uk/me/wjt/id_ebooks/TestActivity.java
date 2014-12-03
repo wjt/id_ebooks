@@ -25,7 +25,6 @@ import java.util.Random;
 public class TestActivity extends Activity {
     private static final String TAG = TestActivity.class.getPackage().getName();
     private static final int SENT_SMS_LOADER = 0;
-    private static final Random RANDOM = new Random();
 
     private List<String> words = null;
     private Button button, clear;
@@ -37,17 +36,7 @@ public class TestActivity extends Activity {
         setContentView(R.layout.activity_test);
 
         textView = (EditText) findViewById(R.id.editText);
-        button = (Button) findViewById(R.id.button);
         clear = (Button) findViewById(R.id.clearButton);
-
-        button.setEnabled(false);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                go();
-            }
-        });
-
         clear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,7 +44,6 @@ public class TestActivity extends Activity {
             }
         });
 
-        getLoaderManager().initLoader(SENT_SMS_LOADER, null, sentSmsLoaderCallbacks);
     }
 
     @Override
@@ -80,46 +68,5 @@ public class TestActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    private final LoaderManager.LoaderCallbacks<Cursor> sentSmsLoaderCallbacks = new LoaderManager.LoaderCallbacks<Cursor>() {
-        @Override
-        public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-            return new CursorLoader(TestActivity.this, Telephony.Sms.Sent.CONTENT_URI, null, null, null, null);
-        }
 
-        @Override
-        public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-            Log.i(TAG, "onLoadFinished");
-            int n = data.getCount();
-
-            StringBuilder sb = new StringBuilder();
-            int bodyIx = data.getColumnIndexOrThrow(Telephony.Sms.Sent.BODY);
-            if (data.moveToFirst()) {
-                for (int i = 0; i < n; i++) {
-                    sb.append(data.getString(bodyIx)).append(" ");
-                    data.moveToNext();
-                }
-            }
-            Log.i(TAG, String.format("%d chars from %d messages", sb.length(), n));
-            words = Arrays.asList(sb.toString().split("\\s+"));
-            button.setEnabled(true);
-        }
-
-        @Override
-        public void onLoaderReset(Loader<Cursor> loader) {
-            Log.w(TAG, "Reset, boo");
-        }
-    };
-
-    private void go() {
-        assert (words != null);
-
-        final int i = RANDOM.nextInt(words.size());
-        final int j = i + 5 + RANDOM.nextInt(7);
-
-        List<String> tokens = words.subList(i, j);
-        Log.i(TAG, tokens.toString());
-        String tweet = TextUtils.join(" ", tokens);
-        textView.append(tweet);
-        textView.append(" ");
-    }
 }
