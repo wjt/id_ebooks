@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">id_ebooks</string>
+    <string name="hello_world">Loading…</string>
+    <string name="action_settings">Settings</string>
+    <string name="go">_ebook me</string>
+    <string name="clear">clear</string>
+
+</resources>
